@@ -26,3 +26,14 @@ export const createPostController = async (
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const getAllPostsController = async (req: Request, res: Response) => {
+  try {
+    const posts = await postServices.getAllPostsService();
+    return res
+      .status(200)
+      .json({ message: "All posts fetched successfully", posts });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};

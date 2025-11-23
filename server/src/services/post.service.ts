@@ -10,3 +10,10 @@ export const createPostService = async (data: CreatePostServiceInput) => {
   });
   return newPost;
 };
+
+export const getAllPostsService = async () => {
+  const posts = await Post.find()
+    .populate("author", "firstname lastname email")
+    .sort({ createdAt: -1 });
+  return posts;
+};

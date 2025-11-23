@@ -10,4 +10,10 @@ router.post(
   postController.createPostController
 );
 
+router.get(
+  "/get-all-posts",
+  authenticateToken,
+  postController.getAllPostsController
+);
+
 export default router;
