@@ -46,4 +46,10 @@ router.put(
   postController.likeOrUnlikePostController
 );
 
+router.get(
+  "/:postId/likes",
+  authenticateToken,
+  postController.getLikeOfPostController
+);
+
 export default router;

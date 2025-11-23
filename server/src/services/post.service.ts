@@ -93,3 +93,17 @@ export const likeOrUnlikePostService = async (
     post,
   };
 };
+
+export const getLikeOfPostService = async (postId: string) => {
+  const post = await Post.findById(postId).populate(
+    "likes",
+    "firstname lastname email"
+  );
+  if (!post) {
+    throw new Error("Post not found");
+  }
+  return {
+    totalLikes: post.likes.length,
+    likedBy: post.likes,
+  };
+};

@@ -148,3 +148,22 @@ export const likeOrUnlikePostController = async (
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const getLikeOfPostController = async (
+  req: Request<{ postId: string }>,
+  res: Response
+) => {
+  try {
+    const { postId } = req.params;
+    const result = await postServices.getLikeOfPostService(postId);
+    return res
+      .status(200)
+      .json({
+        message: "Users who liked the post fetched successfully",
+        totalLikes: result.totalLikes,
+        likedBy: result.likedBy,
+      });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+};
