@@ -16,4 +16,16 @@ router.get(
   postController.getAllPostsController
 );
 
+router.get(
+  "/get-my-posts",
+  authenticateToken,
+  postController.getMyPostsController
+);
+
+router.get(
+  "/get-single-post/:postId",
+  authenticateToken,
+  postController.getSinglePostController
+);
+
 export default router;
