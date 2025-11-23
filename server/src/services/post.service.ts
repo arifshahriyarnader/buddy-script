@@ -1,5 +1,5 @@
 import { Post } from "../models";
-import { CreatePostServiceInput } from "../types";
+import { CreatePostServiceInput, UpdatePostInput } from "../types";
 
 export const createPostService = async (data: CreatePostServiceInput) => {
   const newPost = await Post.create({
@@ -27,5 +27,24 @@ export const getMyPostsService = async (userId: string) => {
 
 export const getSinglePostService = async (postId: string) => {
   const post = await Post.findById(postId).populate("author", "name email");
+  return post;
+};
+
+export const updatePostService = async (
+  postId: string,
+  authorId: string,
+  data: UpdatePostInput
+) => {
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new Error("Post not found");
+  }
+  if (post.author.toString() !== authorId) {
+    throw new Error("Unauthorized: You cannot update this post");
+  }
+  if (data.text !== undefined) post.text = data.text;
+  if (data.images !== undefined) post.images = data.images;
+  if (data.visibility !== undefined) post.visibility = data.visibility;
+  await post.save();
   return post;
 };

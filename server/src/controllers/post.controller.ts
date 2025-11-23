@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createPostValidation } from "../validations";
+import { createPostValidation, updatePostValidation } from "../validations";
 import { CreatePostInput } from "../types";
 import { postServices } from "../services";
 
@@ -84,5 +84,29 @@ export const getSinglePostController = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
+  }
+};
+
+export const updatePostController = async (
+  req: Request<{ postId: string }, {}, any>,
+  res: Response
+) => {
+  try {
+    const parsed = updatePostValidation.parse(req.body);
+    const authorId = req.user?._id;
+    const { postId } = req.params;
+    if (!authorId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const updatedPost = await postServices.updatePostService(
+      postId,
+      authorId,
+      parsed
+    );
+    return res
+      .status(200)
+      .json({ message: "Post updated successfully", updatedPost });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
   }
 };

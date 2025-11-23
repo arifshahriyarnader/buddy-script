@@ -28,4 +28,10 @@ router.get(
   postController.getSinglePostController
 );
 
+router.put(
+  "/update-post/:postId",
+  authenticateToken,
+  postController.updatePostController
+);
+
 export default router;
