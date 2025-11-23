@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Post } from "../models";
 import {
   CreatePostServiceInput,
@@ -66,4 +67,29 @@ export const deletePostService = async ({
   }
   await Post.findByIdAndDelete(postId);
   return;
+};
+
+export const likeOrUnlikePostService = async (
+  postId: string,
+  userId: string
+) => {
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new Error("Post not found");
+  }
+  const userObjectId = new Types.ObjectId(userId);
+  const isLiked = post.likes.some((id) => id.toString() === userId);
+
+  if (isLiked) {
+    post.likes = post.likes.filter((id) => id.toString() !== userId);
+  } else {
+    post.likes.push(userObjectId);
+  }
+
+  await post.save();
+  return {
+    liked: !isLiked,
+    totalLikes: post.likes.length,
+    post,
+  };
 };

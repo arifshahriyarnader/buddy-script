@@ -40,4 +40,10 @@ router.delete(
   postController.deletePostController
 );
 
+router.put(
+  "/like-unlike-post/:postId",
+  authenticateToken,
+  postController.likeOrUnlikePostController
+);
+
 export default router;

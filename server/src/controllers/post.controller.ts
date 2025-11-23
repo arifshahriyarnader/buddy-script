@@ -127,3 +127,24 @@ export const deletePostController = async (
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const likeOrUnlikePostController = async (
+  req: Request<{ postId: string }>,
+  res: Response
+) => {
+  try {
+    const userId = req.user?._id;
+    const { postId } = req.params;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    const result = await postServices.likeOrUnlikePostService(postId, userId);
+    return res.status(200).json({
+      message: result.liked
+        ? "Post liked successfully"
+        : "Post unliked successfully",
+      totalLikes: result.totalLikes,
+      post: result.post,
+    });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+};
