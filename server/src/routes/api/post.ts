@@ -34,4 +34,10 @@ router.put(
   postController.updatePostController
 );
 
+router.delete(
+  "/delete-post/:postId",
+  authenticateToken,
+  postController.deletePostController
+);
+
 export default router;

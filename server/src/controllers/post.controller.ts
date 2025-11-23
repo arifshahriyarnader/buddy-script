@@ -110,3 +110,20 @@ export const updatePostController = async (
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const deletePostController = async (
+  req: Request<{ postId: string }>,
+  res: Response
+) => {
+  try {
+    const authorId = req.user?._id;
+    const { postId } = req.params;
+    if (!authorId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    await postServices.deletePostService({ postId, authorId });
+    return res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+};

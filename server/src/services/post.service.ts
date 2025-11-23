@@ -1,5 +1,9 @@
 import { Post } from "../models";
-import { CreatePostServiceInput, UpdatePostInput } from "../types";
+import {
+  CreatePostServiceInput,
+  UpdatePostInput,
+  DeletePostInput,
+} from "../types";
 
 export const createPostService = async (data: CreatePostServiceInput) => {
   const newPost = await Post.create({
@@ -47,4 +51,19 @@ export const updatePostService = async (
   if (data.visibility !== undefined) post.visibility = data.visibility;
   await post.save();
   return post;
+};
+
+export const deletePostService = async ({
+  postId,
+  authorId,
+}: DeletePostInput) => {
+  const deletePost = await Post.findById(postId);
+  if (!deletePost) {
+    throw new Error("Post not found");
+  }
+  if (deletePost.author.toString() !== authorId) {
+    throw new Error("Unauthorized: You cannot delete this post");
+  }
+  await Post.findByIdAndDelete(postId);
+  return;
 };
