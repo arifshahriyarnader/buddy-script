@@ -68,3 +68,17 @@ export const updateCommentController = async (
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const deleteCommentController = async (
+  req: Request<{ commentId: string }>,
+  res: Response
+) => {
+  try {
+    const { commentId } = req.params;
+    const userId = req.user?._id.toString();
+    await commentServices.deleteCommentService(commentId, userId!);
+    return res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+};

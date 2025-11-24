@@ -22,4 +22,10 @@ router.put(
   commentController.updateCommentController
 );
 
+router.delete(
+  "/delete-comment/:commentId",
+  authenticateToken,
+  commentController.deleteCommentController
+);
+
 export default router;

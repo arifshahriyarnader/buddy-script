@@ -1,4 +1,4 @@
-import { Comment } from "../models";
+import { Comment, Post } from "../models";
 import { Types } from "mongoose";
 import { CreateCommentInput, UpdateCommentInput } from "../types";
 
@@ -30,4 +30,24 @@ export const updateCommentService = async (data: UpdateCommentInput) => {
   comment.text = data.text;
   await comment.save();
   return comment;
+};
+
+export const deleteCommentService = async (
+  commentId: string,
+  userId: string
+) => {
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+  const post = await Post.findById(comment.postId);
+  if (!post) {
+    throw new Error("Post not found");
+  }
+  const isCommentAuthor = comment.author.toString() === userId;
+  const isPostAuthor = post.author.toString() === userId;
+  if (!isCommentAuthor && !isPostAuthor) {
+    throw new Error("Unauthorized: You cannot delete this comment");
+  }
+  await Comment.findByIdAndDelete(commentId);
 };
