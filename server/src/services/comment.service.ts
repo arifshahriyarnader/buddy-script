@@ -1,6 +1,6 @@
 import { Comment } from "../models";
 import { Types } from "mongoose";
-import { CreateCommentInput } from "../types";
+import { CreateCommentInput, UpdateCommentInput } from "../types";
 
 export const createCommentService = async (data: CreateCommentInput) => {
   const newComment = await Comment.create({
@@ -17,4 +17,17 @@ export const getCommentsService = async (postId: string) => {
     .populate("author", "firstname lastname email")
     .sort({ createdAt: 1 });
   return commentsWithReplies;
+};
+
+export const updateCommentService = async (data: UpdateCommentInput) => {
+  const comment = await Comment.findById(data.commentId);
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+  if (comment.author.toString() !== data.userId) {
+    throw new Error("Unauthorized: You cannot update this comment");
+  }
+  comment.text = data.text;
+  await comment.save();
+  return comment;
 };

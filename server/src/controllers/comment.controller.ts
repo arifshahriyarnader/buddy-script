@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { createCommentValidation } from "../validations";
+import {
+  createCommentValidation,
+  updateCommentValidation,
+} from "../validations";
 import { commentServices } from "../services";
 
 export const createCommentController = async (
@@ -36,6 +39,30 @@ export const getCommentsController = async (req: Request, res: Response) => {
     return res.status(200).json({
       message: "Comments and Replies fetched successfully",
       commentsWithReplies,
+    });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+export const updateCommentController = async (
+  req: Request<{ commentId: string }, {}, any>,
+  res: Response
+) => {
+  try {
+    const { commentId } = req.params;
+    const parsed = updateCommentValidation.parse(req.body);
+    const userId = req.user?._id as string;
+
+    const updated = await commentServices.updateCommentService({
+      commentId,
+      userId,
+      text: parsed.text,
+    });
+
+    return res.json({
+      message: "Comment updated successfully",
+      updated,
     });
   } catch (error: any) {
     return res.status(400).json({ message: error.message });

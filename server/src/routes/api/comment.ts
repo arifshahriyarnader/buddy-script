@@ -16,4 +16,10 @@ router.get(
   commentController.getCommentsController
 );
 
+router.put(
+  "/update-comment/:commentId",
+  authenticateToken,
+  commentController.updateCommentController
+);
+
 export default router;
