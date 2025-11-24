@@ -26,3 +26,18 @@ export const createCommentController = async (
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const getCommentsController = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const commentsWithReplies = await commentServices.getCommentsService(
+      postId
+    );
+    return res.status(200).json({
+      message: "Comments and Replies fetched successfully",
+      commentsWithReplies,
+    });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+};

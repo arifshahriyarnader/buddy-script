@@ -10,4 +10,10 @@ router.post(
   commentController.createCommentController
 );
 
+router.get(
+  "/get-comments-replies/:postId",
+  authenticateToken,
+  commentController.getCommentsController
+);
+
 export default router;

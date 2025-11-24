@@ -11,3 +11,10 @@ export const createCommentService = async (data: CreateCommentInput) => {
   });
   return newComment;
 };
+
+export const getCommentsService = async (postId: string) => {
+  const commentsWithReplies = await Comment.find({ postId })
+    .populate("author", "firstname lastname email")
+    .sort({ createdAt: 1 });
+  return commentsWithReplies;
+};
