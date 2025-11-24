@@ -51,3 +51,26 @@ export const deleteCommentService = async (
   }
   await Comment.findByIdAndDelete(commentId);
 };
+
+export const likeOrUnlikeCommentService = async (
+  commentId: string,
+  userId: string
+) => {
+  const comment = await Comment.findById(commentId);
+  if (!comment) throw new Error("Comment not found");
+
+  const isLiked = comment.likes.some((id) => id.toString() === userId);
+
+  if (isLiked) {
+    comment.likes = comment.likes.filter((id) => id.toString() !== userId);
+  } else {
+    comment.likes.push(new Types.ObjectId(userId));
+  }
+
+  await comment.save();
+
+  return {
+    liked: !isLiked,
+    totalLikes: comment.likes.length,
+  };
+};

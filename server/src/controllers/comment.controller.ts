@@ -82,3 +82,29 @@ export const deleteCommentController = async (
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const likeOrUnlikeCommentController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { commentId } = req.params;
+    const userId = req.user?._id?.toString();
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const result = await commentServices.likeOrUnlikeCommentService(
+      commentId,
+      userId
+    );
+
+    return res.json({
+      message: result.liked ? "Comment liked" : "Comment unliked",
+      totalLikes: result.totalLikes,
+    });
+  } catch (err: any) {
+    return res.status(400).json({ message: err.message });
+  }
+};

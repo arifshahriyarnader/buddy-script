@@ -28,4 +28,10 @@ router.delete(
   commentController.deleteCommentController
 );
 
+router.put(
+  "/like-unlike-comment/:commentId",
+  authenticateToken,
+  commentController.likeOrUnlikeCommentController
+);
+
 export default router;
