@@ -1,18 +1,12 @@
-
-import './App.css'
-import Registration from './components/auth/Registration';
+import "./App.css";
+import { AppRouter } from "./router";
 
 function App() {
- 
-
   return (
     <>
-      <div>
-        <Registration />
-      </div>
-      
+      <AppRouter />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

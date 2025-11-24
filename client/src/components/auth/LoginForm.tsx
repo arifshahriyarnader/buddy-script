@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.svg";
 
-export default function RegistrationPage() {
+const LoginForm = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50  p-4 relative overflow-hidden">
+    <div>
       <div className="absolute top-0 left-0 w-40 h-40 bg-purple-300 rounded-full opacity-30 blur-2xl"></div>
       <div className="absolute bottom-10 right-0 w-56 h-56 bg-blue-300 rounded-full opacity-20 blur-3xl"></div>
 
@@ -12,9 +13,7 @@ export default function RegistrationPage() {
         </div>
 
         <p className="text-center text-gray-600 mb-1">Get Started Now</p>
-        <h2 className="text-2xl font-semibold text-center mb-8">
-          Registration
-        </h2>
+        <h2 className="text-2xl font-semibold text-center mb-8">Login</h2>
 
         <form className="space-y-4">
           <div>
@@ -33,38 +32,23 @@ export default function RegistrationPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Repeat Password
-            </label>
-            <input
-              type="password"
-              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-purple-200 outline-none"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 mt-2">
-            <input type="checkbox" className="h-4 w-4" />
-            <span className="text-sm text-gray-600">
-              I agree to terms & conditions
-            </span>
-          </div>
-
           <button
             type="submit"
-            className="w-full bg-[#1890FF] hover:bg-[#1479d6] text-white rounded-lg py-2 mt-4 font-medium transition"
+            className="w-full bg-[#1890FF] hover:bg-[#1479d6] text-white cursor-pointer rounded-lg py-2 mt-4 font-medium transition"
           >
-            Register Now
+            Login
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Already have an account?{" "}
-          <a href="#" className="text-purple-600 hover:underline font-medium">
-            Login
-          </a>
+          Don't have an account?{" "}
+          <Link to="/" className="text-purple-600 hover:underline font-medium">
+            Registration
+          </Link>
         </p>
       </div>
     </div>
   );
-}
+};
+
+export default LoginForm;
