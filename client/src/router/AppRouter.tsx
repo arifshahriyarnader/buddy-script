@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { RegistrationPage, LoginPage } from "../pages";
-
+import { RegistrationPage, LoginPage, FeedPage } from "../pages";
+import SecureRoute from "./SecureRoute";
 
 const AppRouter = () => {
   return (
@@ -8,6 +8,14 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<RegistrationPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/feed"
+          element={
+            <SecureRoute>
+              <FeedPage />
+            </SecureRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

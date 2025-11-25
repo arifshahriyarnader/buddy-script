@@ -24,7 +24,7 @@ const LoginForm = () => {
     try {
       const authUser = await authServices.login(payload);
       console.log("Login successful:", authUser);
-      navigate("/");
+      navigate("/feed");
     } catch (error) {
       console.error(error);
       alert("Login failed, please try again");
