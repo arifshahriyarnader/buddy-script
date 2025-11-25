@@ -70,6 +70,7 @@ const Feed = () => {
         </div>
 
         <div className="bg-white p-5 rounded-xl shadow mb-6">
+          <form>
           <textarea
             placeholder="What's on your mind?"
             className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200 outline-none mb-3"
@@ -82,6 +83,7 @@ const Feed = () => {
               Post
             </button>
           </div>
+          </form>
         </div>
 
         <div className="space-y-6">
