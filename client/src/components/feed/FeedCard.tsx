@@ -1,3 +1,9 @@
+import { useEffect, useState } from "react";
+import {
+  getPostsTotalLikes,
+  likeUnlikePost,
+} from "../../api/services/postServices";
+
 interface FeedCardProps {
   post: {
     _id: string;
@@ -13,6 +19,30 @@ interface FeedCardProps {
 const FeedCard: React.FC<FeedCardProps> = ({ post }) => {
   const first = post.author?.firstname || "Unknown";
   const last = post.author?.lastname || "";
+  const [likes, setLikes] = useState<number>(0);
+  const [liked, setLiked] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const data = await getPostsTotalLikes(post._id);
+        setLikes(data.totalLikes);
+      } catch (err) {
+        console.error("Error fetching likes:", err);
+      }
+    };
+    fetchLikes();
+  }, [post._id]);
+
+  const handleLike = async () => {
+    try {
+      const result = await likeUnlikePost(post._id);
+      setLiked(result.liked);
+      setLikes(result.totalLikes);
+    } catch (err) {
+      console.error("Like error:", err);
+    }
+  };
 
   return (
     <div className="bg-white p-5 rounded-xl shadow border border-gray-100">
@@ -21,8 +51,6 @@ const FeedCard: React.FC<FeedCardProps> = ({ post }) => {
         <div>
           <h4 className="font-medium">
             {" "}
-            {/* {post.user.firstname} {post.user.lastname} */}
-            {/* {post.user?.firstname ?? "Unknown"} {post.user?.lastname ?? ""} */}
             {first} {last}
           </h4>
           <p className="text-xs text-gray-500">
@@ -42,7 +70,14 @@ const FeedCard: React.FC<FeedCardProps> = ({ post }) => {
       )} */}
 
       <div className="flex items-center gap-6 text-gray-600">
-        <button className="hover:text-blue-600 cursor-pointer">👍 Like</button>
+        <button
+          className={`cursor-pointer hover:text-blue-600 ${
+            liked ? "text-blue-600" : ""
+          }`}
+          onClick={handleLike}
+        >
+          👍 Like ({likes})
+        </button>
         <button className="hover:text-blue-600 cursor-pointer">
           💬 Comment
         </button>

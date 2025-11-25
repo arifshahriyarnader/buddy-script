@@ -78,7 +78,7 @@ export const deletePost = async (
 
 export const likeUnlikePost = async (postId: string) => {
   try {
-    const response = await http.post(`/api/posts/like-unlike-post/${postId}`);
+    const response = await http.put(`/api/posts/like-unlike-post/${postId}`);
     return response.data;
   } catch (error) {
     console.error("Error liking/unliking the post:", error);
