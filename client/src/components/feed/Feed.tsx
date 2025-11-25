@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
+import type { PostType } from "../../types/post";
 import logo from "../../assets/images/logo.svg";
 import { authServices } from "../../auth";
 import { useNavigate } from "react-router-dom";
+import { addPost, getAllPosts } from "../../api/services/postServices";
+import FeedCard from "./FeedCard";
 
 const Feed = () => {
   const navigate = useNavigate();
   const isUserLoggedIn = authServices.isUserLoggedIn();
   const [userName, setUserName] = useState("user");
   const [postText, setPostText] = useState("");
+  const [posts, setPosts] = useState<PostType[]>([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -27,6 +31,37 @@ const Feed = () => {
       }
     }, 0);
   }, [isUserLoggedIn]);
+
+  const handleCreatePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!postText.trim()) {
+      alert("Post content cannot be empty.");
+      return;
+    }
+    try {
+      await addPost({ text: postText });
+      alert("Post created successfully!");
+      setPostText("");
+    } catch (error) {
+      console.error("Error creating post:", error);
+      alert("Failed to create post. Please try again.");
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      const data = await getAllPosts();
+      setPosts(data.posts || []);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      alert("Failed to fetch posts. Please try again.");
+    }
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      fetchPosts();
+    });
+  }, []);
 
   const handleLogout = () => {
     authServices.logout();
@@ -70,49 +105,25 @@ const Feed = () => {
         </div>
 
         <div className="bg-white p-5 rounded-xl shadow mb-6">
-          <form>
-          <textarea
-            placeholder="What's on your mind?"
-            className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200 outline-none mb-3"
-            value={postText}
-            onChange={(e) => setPostText(e.target.value)}
-          />
+          <form onSubmit={handleCreatePost}>
+            <textarea
+              placeholder="What's on your mind?"
+              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200 outline-none mb-3"
+              value={postText}
+              onChange={(e) => setPostText(e.target.value)}
+            />
 
-          <div className="flex items-center justify-between">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              Post
-            </button>
-          </div>
+            <div className="flex items-center justify-between">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                Post
+              </button>
+            </div>
           </form>
         </div>
 
         <div className="space-y-6">
-          {[1, 2, 3].map((post) => (
-            <div
-              key={post}
-              className="bg-white p-5 rounded-xl shadow border border-gray-100"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-10 w-10 rounded-full bg-gray-300" />
-                <div>
-                  <h4 className="font-medium">John Doe</h4>
-                  <p className="text-xs text-gray-500">2 hours ago</p>
-                </div>
-              </div>
-
-              <p className="mb-3">This is a sample post content...</p>
-
-              <img
-                src="https://via.placeholder.com/500"
-                alt="Post"
-                className="rounded-lg mb-3"
-              />
-
-              <div className="flex items-center gap-6 text-gray-600">
-                <button className="hover:text-blue-600">👍 Like</button>
-                <button className="hover:text-blue-600">💬 Comment</button>
-              </div>
-            </div>
+          {posts.map((post) => (
+            <FeedCard key={post._id} post={post} />
           ))}
         </div>
       </main>
