@@ -7,4 +7,7 @@ export const appConfig = {
   DB: {
     MONGODB_URI: process.env.MONGODB_URI,
   },
+  AUTH: {
+    JWT_SECRET: process.env.JWT_SECRET || ("my_secret_jwt_key" as string),
+  },
 };
