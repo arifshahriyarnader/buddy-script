@@ -42,6 +42,7 @@ const Feed = () => {
       await addPost({ text: postText });
       alert("Post created successfully!");
       setPostText("");
+      fetchPosts();
     } catch (error) {
       console.error("Error creating post:", error);
       alert("Failed to create post. Please try again.");
