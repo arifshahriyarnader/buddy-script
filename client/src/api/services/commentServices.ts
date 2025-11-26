@@ -7,7 +7,7 @@ export const addComment = async (commentData: CreateCommentType) => {
       "/api/comments/create-comment",
       commentData
     );
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error creating comment:", error);
     throw error;
@@ -19,6 +19,7 @@ export const getCommentsWithReplies = async (postId: string) => {
     const response = await http.get(
       `/api/comments/get-comments-replies/${postId}`
     );
+     console.log("COMMENTS FETCH SUCCESS:", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching comments and replies:", error);

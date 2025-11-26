@@ -3,6 +3,12 @@ import {
   getPostsTotalLikes,
   likeUnlikePost,
 } from "../../api/services/postServices";
+import {
+  addComment,
+  getCommentsWithReplies,
+} from "../../api/services/commentServices";
+import type { CommentType } from "../../types/comment";
+import CommentItem from "./CommentItem";
 
 interface FeedCardProps {
   post: {
@@ -21,6 +27,25 @@ const FeedCard: React.FC<FeedCardProps> = ({ post }) => {
   const last = post.author?.lastname || "";
   const [likes, setLikes] = useState<number>(0);
   const [liked, setLiked] = useState<boolean>(false);
+  const [showCommentBox, setShowCommentBox] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState<CommentType[]>([]);
+
+  const loadComments = async () => {
+    try {
+      const data = await getCommentsWithReplies(post._id);
+      setComments(data.comments || []);
+    } catch (err) {
+      console.error("Error loading comments:", err);
+      setComments([]);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (showCommentBox) loadComments();
+    }, 0);
+  }, [showCommentBox]);
 
   useEffect(() => {
     const fetchLikes = async () => {
@@ -41,6 +66,24 @@ const FeedCard: React.FC<FeedCardProps> = ({ post }) => {
       setLikes(result.totalLikes);
     } catch (err) {
       console.error("Like error:", err);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!commentText.trim()) return alert("Comment cannot be empty.");
+
+    try {
+      await addComment({
+        postId: post._id,
+        text: commentText,
+      });
+
+      alert("Comment added!");
+      setCommentText("");
+      setShowCommentBox(false);
+    } catch (err) {
+      console.error("Comment error:", err);
+      alert("Failed to add comment.");
     }
   };
 
@@ -76,12 +119,37 @@ const FeedCard: React.FC<FeedCardProps> = ({ post }) => {
           }`}
           onClick={handleLike}
         >
-          👍 Like ({likes})
+          Like ({likes})
         </button>
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button
+          className="hover:text-blue-600 cursor-pointer"
+          onClick={() => setShowCommentBox(!showCommentBox)}
+        >
           💬 Comment
         </button>
       </div>
+      {showCommentBox && (
+        <div className="mt-3 bg-gray-100 p-3 rounded-xl">
+          <textarea
+            placeholder="Write a comment..."
+            className="w-full border rounded-lg px-3 py-2 outline-none"
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+          />
+
+          <button
+            onClick={handleAddComment}
+            className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700"
+          >
+            Post Comment
+          </button>
+          <div className="mt-4 space-y-3">
+            {comments?.map((c) => (
+              <CommentItem key={c._id} comment={c} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
