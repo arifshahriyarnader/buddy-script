@@ -35,15 +35,16 @@ export const login = async (loggedUserData: LoginData) => {
       `${appConfig.BASE_URL}/api/auth/login`,
       loggedUserData
     );
+     const data = response.data;
     const authUser: AuthUser = {
       user: {
-        _id: response.data._id,
-        firstname: response.data.firstname,
-        lastname: response.data.lastname,
-        email: response.data.email,
+        _id: data._id,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
       },
-      accessToken: response.data.accessToken,
-      refreshToken: response.data.refreshToken,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
     };
     saveAuthUser(authUser);
     return authUser;
