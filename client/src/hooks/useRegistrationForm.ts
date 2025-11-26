@@ -54,7 +54,7 @@ export const useRegistrationForm = () => {
       lastname: formData.lastname,
       email: formData.email,
       password: formData.password,
-      repeatPassword: formData.repeatPassword,
+      // repeatPassword: formData.repeatPassword,
     };
     try {
       await authServices.registration(payload);

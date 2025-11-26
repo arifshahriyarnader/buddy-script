@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  server:
+    build: ./server
+    container_name: buddy-script-server
+    ports:
+      - "5001:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/buddy-script
+      - JWT_SECRET=your_jwt_secret_key
+    depends_on:
+      - mongo
+
+  client:
+    build: ./client
+    container_name: buddy-script-client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+
+  mongo:
+    image: mongo:latest
+    container_name: buddy-script-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

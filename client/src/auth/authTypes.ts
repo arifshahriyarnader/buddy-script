@@ -11,7 +11,7 @@ export interface RegistrationData {
   lastname: string;
   email: string;
   password: string;
-  repeatPassword: string;
+  // repeatPassword: string;
 }
 
 export interface LoginData {
